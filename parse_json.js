@@ -20,6 +20,7 @@ async function appendToCSV(exam_name) {
     }
 
     const data = sets.map((set) => ({
+      exam_name: exam_name || "",
       title: set?.title || "",
       url: set?._webUrl || "",
       numTerms: set?.numTerms || 0,
@@ -33,8 +34,7 @@ async function appendToCSV(exam_name) {
       return `"${title}","${url}",${numTerms}`;
     });
 
-    const csvFilePath = path.join(__dirname, "./output/quizlet_sets_cpa.csv");
-
+    const csvFilePath = path.join(__dirname, "./output/quizlets.csv");
 
     // Check if file exists
     let fileExists = false;
@@ -47,13 +47,13 @@ async function appendToCSV(exam_name) {
 
     if (!fileExists) {
       // If file doesn't exist, add header
-      await fs.writeFile(csvFilePath, "Title,URL,numTerms\n");
+      await fs.writeFile(csvFilePath, "Query,Title,URL,numTerms\n");
     }
 
     // Append new data to CSV file
     if (csvRows.length > 0) {
       await fs.appendFile(csvFilePath, csvRows.join("\n") + "\n");
-      console.log(`Appended ${csvRows.length} sets to quizlet_sets_ptcb.csv`);
+      console.log(`Appended ${csvRows.length} sets to quizlets.csv`);
     } else {
       console.log("No valid data to append to CSV.");
     }
@@ -63,4 +63,4 @@ async function appendToCSV(exam_name) {
 }
 
 // Run the function
-appendToCSV();
+appendToCSV("nbme");
